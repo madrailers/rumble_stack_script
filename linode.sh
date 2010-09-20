@@ -4,9 +4,11 @@
 # <udf name="deploy_password" label="Deploy User Password" />
 # <udf name="my_ssh_public_key" label="Your SSH Public Key" />
 # <udf name="ruby" label="Ruby to Install" oneOf="ree,ruby-1.8.7,ruby-1.9.2,jruby,rbx" default="ruby-1.9.2" />
+# <udf name="persistence" label="Persistence" manyOf="MySQL,PostgreSQL,MongoDB,Redis,CouchDB" example="All but MySQL are not yet implemented" default="MySQL" />
+# <udf name="servers" label="Servers" manyOf="Apache,nginx,node.js" example="None of these are implemented" />
 
 function system_install_logrotate {
-  echo 'todo'
+  apt-get -y install logrotate
 }
 
 function rvm_install {
@@ -34,7 +36,7 @@ source <ssinclude StackScriptID="1">
 source <ssinclude StackScriptID="123">
 system_update
 
-system_add_user deploy $DEPLOY_PASSWORD users
+system_add_user deploy $DEPLOY_PASSWORD "users,sudo"
 system_user_add_ssh_key deploy "$MY_SSH_PUBLIC_KEY"
 
 goodstuff
@@ -44,9 +46,10 @@ system_enable_universe
 system_security_ufw_install
 system_security_ufw_configure_basic
 system_update_locale_en_US_UTF_8
+system_install_logrotate
 
-# system_sshd_permitrootlogin No
-# system_sshd_passwordauthentication No
+system_sshd_permitrootlogin No
+system_sshd_passwordauthentication No
 system_sshd_pubkeyauthentication Yes
 
 /etc/init.d/ssh restart
