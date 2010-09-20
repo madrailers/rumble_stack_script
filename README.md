@@ -25,3 +25,11 @@ Leniency
   * Apache (todo)
   * nginx (todo)
   * node.js (todo)
+
+Acknowledgements
+================
+
+The contributors:
+
+* [Bradley Grzesiak](http://github.com/listophy)
+* [Levi Cook](http://github.com/levicook)
