@@ -16,6 +16,12 @@ function system_install_logrotate {
   apt-get -y install logrotate
 }
 
+function system_sshd_append {
+  # $1 configuration option
+  # $2 value to set
+  echo "$1 $2" >> /etc/ssh/sshd_config
+}
+
 function rvm_install {
   # $1 - username
   RVM_USER=$1
@@ -24,6 +30,8 @@ function rvm_install {
   $AS_USER 'bash < <( curl http://rvm.beginrescueend.com/releases/rvm-install-head )'
   $AS_USER "sed -i -e 's/^\[ -z \"\$PS1\" \] && return$/if [[ -n \"\$PS1\" ]]; then/' .bashrc && echo 'fi' >> .bashrc"
   $AS_USER "echo '[[ -s \"\$HOME/.rvm/scripts/rvm\" ]] && . \"\$HOME/.rvm/scripts/rvm\"' >> .bashrc"
+
+  apt-get install -y libxslt1-dev libxslt-ruby
 }
 
 function rvm_default_ruby {
@@ -72,6 +80,11 @@ function mongodb_install {
   apt-get install -y mongodb-stable
 }
 
+function user_ssh_keygen {
+  # $1 - username
+  sudo -u $1 -i -- "ssh-keygen -N '' -f ~/.ssh/id_rsa -t rsa -q"
+}
+
 exec &> /root/stackscript.log
 source <ssinclude StackScriptID="1">
 system_update
@@ -91,8 +104,11 @@ system_update_locale_en_US_UTF_8
 system_sshd_permitrootlogin No
 system_sshd_passwordauthentication No
 system_sshd_pubkeyauthentication Yes
+system_sshd_append ClientAliveInterval 60
 /etc/init.d/ssh restart
 system_update_hostname "$SYS_HOSTNAME"
+
+user_ssh_keygen deploy
 
 if [[ -n "$(echo $PERSISTENCE | grep 'MySQL')" ]]; then
   mysql_install "$DEPLOY_PASSWORD"
@@ -109,4 +125,7 @@ rvm_install deploy
 rvm_default_ruby deploy "$RUBY"
 
 rvm_setup_project deploy "$PROJECT_NAME"
-rvm_setup_project_with_nginx deploy "$PROJECT_NAME"
+
+if [[ -n "#(echo $SERVERS | grep 'nginx')" ]]; then
+  rvm_setup_project_with_nginx deploy "$PROJECT_NAME"
+fi
