@@ -1,9 +1,9 @@
 Rumble StackScript
 ==================
 
-A Linode StackScript designed for Rails Rumble usage. It's sometimes opinionated, sometimes lenient.
+A Linode StackScript designed for Rails Rumble usage.
 
-**NOTE:** This is seriously alpha right now. It is on GitHub solely so that others may hack on it and improve it. Don't use it for anything important yet.
+**NOTE:** This is seriously alpha right now. It is on GitHub solely so that others may hack on it and improve it. Do not use it for anything important yet.
 
 Opinions
 ========
@@ -16,14 +16,12 @@ Leniency
 ========
 
 * Available Persistence Engines
-  * MySQL (todo)
+  * MySQL
   * PostgreSQL (todo)
-  * MongoDB (todo)
-  * Redis (todo)
-  * CouchDB (todo)
+  * MongoDB
 * Available Servers
-  * Apache (todo)
-  * nginx (todo)
+  * Apache (todo, including passenger support)
+  * nginx
   * node.js (todo)
 
 Acknowledgements
