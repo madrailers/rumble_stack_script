@@ -129,3 +129,8 @@ rvm_setup_project deploy "$PROJECT_NAME"
 if [[ -n "#(echo $SERVERS | grep 'nginx')" ]]; then
   rvm_setup_project_with_nginx deploy "$PROJECT_NAME"
 fi
+
+echo "************************************"
+echo "All done! Now, get coding"
+echo ""
+echo "(You'll want to set up nginx yourself)"
